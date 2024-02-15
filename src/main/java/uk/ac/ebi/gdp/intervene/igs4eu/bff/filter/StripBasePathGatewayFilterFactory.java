@@ -41,7 +41,6 @@ public class StripBasePathGatewayFilterFactory extends AbstractGatewayFilterFact
                     .path(newPath)
                     .contextPath(null)
                     .build();
-
             return chain
                     .filter(exchange
                             .mutate()

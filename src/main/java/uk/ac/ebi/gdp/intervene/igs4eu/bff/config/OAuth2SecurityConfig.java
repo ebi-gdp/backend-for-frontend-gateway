@@ -19,6 +19,7 @@ package uk.ac.ebi.gdp.intervene.igs4eu.bff.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -35,33 +36,75 @@ import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 @EnableWebFluxSecurity
 public class OAuth2SecurityConfig {
 
+    private static final String actuatorEndpoint = "/actuator/health";
+
+    @Profile("!dev")
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http,
-                                                            final @Value("${spring.security.oauth2.client.provider.elixir.success-url}") String successRedirectURL,
-                                                            final @Value("${spring.security.oauth2.client.logout-uri}") String logoutURI,
-                                                            final @Value("${web-client.base-url}") String baseURL) throws URISyntaxException {
+                                                            @Value("${spring.security.oauth2.client.provider.elixir.success-url}") final String successRedirectURL,
+                                                            @Value("${spring.security.oauth2.client.logout-uri}") final String logoutURI,
+                                                            @Value("${web-client.base-url}") final String baseURL) throws URISyntaxException {
+        return securityConfig(configureMatchers(http, actuatorEndpoint),
+                successRedirectURL,
+                redirectServerLogoutSuccessHandler(baseURL),
+                logoutURI)
+                .build();
+    }
+
+    @Profile("dev")
+    @Bean
+    public SecurityWebFilterChain springSecurityFilterChainForDev(final ServerHttpSecurity http,
+                                                                  @Value("${spring.security.oauth2.client.provider.elixir.success-url}") final String successRedirectURL,
+                                                                  @Value("${spring.security.oauth2.client.logout-uri}") final URI logoutURI,
+                                                                  @Value("${web-client.base-url}") final String baseURL,
+                                                                  @Value("${whitelist.test.uri}") final URI whiteListURI) throws URISyntaxException {
+        final ServerHttpSecurity serverHttpSecurity = configureMatchers(http, whiteListURI.getPath(), actuatorEndpoint);
+        return securityConfig(serverHttpSecurity,
+                successRedirectURL,
+                redirectServerLogoutSuccessHandler(baseURL),
+                logoutURI.getPath())
+                .build();
+    }
+
+    private ServerHttpSecurity configureMatchers(final ServerHttpSecurity http,
+                                                 final String... whiteListURI) {
+        return corsCsrfConfig(http)
+                .authorizeExchange()
+                .pathMatchers(whiteListURI)
+                .permitAll()
+                .and();
+    }
+
+    private ServerHttpSecurity corsCsrfConfig(final ServerHttpSecurity serverHttpSecurity) {
+        return serverHttpSecurity
+                .cors().disable()
+                .csrf().disable();
+    }
+
+    private ServerHttpSecurity securityConfig(final ServerHttpSecurity serverHttpSecurity,
+                                              final String successRedirectURL,
+                                              final RedirectServerLogoutSuccessHandler rslSuccessHandler,
+                                              final String logoutURI) {
+        return serverHttpSecurity
+                .authorizeExchange()
+                .anyExchange()
+                .authenticated()
+                .and()
+                .oauth2Login()
+                .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler(successRedirectURL))
+                .and()
+                .logout()
+                .logoutUrl(logoutURI)
+                .logoutHandler(new WebSessionServerLogoutHandler())
+                .logoutSuccessHandler(rslSuccessHandler)
+                .and()
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(new HttpStatusServerEntryPoint(UNAUTHORIZED)));
+    }
+
+    private RedirectServerLogoutSuccessHandler redirectServerLogoutSuccessHandler(final String baseURL) throws URISyntaxException {
         final RedirectServerLogoutSuccessHandler rslSuccessHandler = new RedirectServerLogoutSuccessHandler();
         rslSuccessHandler.setLogoutSuccessUrl(new URI(baseURL));
-
-        // @formatter:off
-        return http
-                .cors().disable()
-                .csrf().disable()
-                   .authorizeExchange()
-                   .anyExchange()
-                   .authenticated()
-                .and()
-                   .oauth2Login()
-                   .authenticationSuccessHandler(new RedirectServerAuthenticationSuccessHandler(successRedirectURL))
-                .and()
-                   .logout()
-                   .logoutUrl(logoutURI)
-                   .logoutHandler(new WebSessionServerLogoutHandler())
-                   .logoutSuccessHandler(rslSuccessHandler)
-                .and()
-                   .exceptionHandling(exceptionHandling -> exceptionHandling
-                        .authenticationEntryPoint(new HttpStatusServerEntryPoint(UNAUTHORIZED)))
-                .build();
-        // @formatter:on
+        return rslSuccessHandler;
     }
 }
