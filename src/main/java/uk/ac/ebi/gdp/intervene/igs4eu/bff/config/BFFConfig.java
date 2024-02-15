@@ -20,6 +20,7 @@ package uk.ac.ebi.gdp.intervene.igs4eu.bff.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.oauth2.client.R2dbcReactiveOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
@@ -33,6 +34,7 @@ import org.springframework.web.server.session.WebSessionIdResolver;
 @EnableRedisWebSession
 public class BFFConfig {
 
+    @Profile("!dev")
     @Bean
     public WebSessionIdResolver webSessionIdResolver(final WebSessionCookieProperties webSessionCookieProperties) {
         final CookieWebSessionIdResolver resolver = new CookieWebSessionIdResolver();
@@ -45,6 +47,13 @@ public class BFFConfig {
                 .domain(webSessionCookieProperties.getDomain())
         );
         return resolver;
+    }
+
+    @Profile("!dev")
+    @ConfigurationProperties(prefix = "web-session.cookie")
+    @Bean
+    public WebSessionCookieProperties webSessionCookieProperties() {
+        return new WebSessionCookieProperties();
     }
 
     @Bean
@@ -69,11 +78,5 @@ public class BFFConfig {
                 .baseUrl(baseURL)
                 .filter(oauth)
                 .build();
-    }
-
-    @ConfigurationProperties(prefix = "web-session.cookie")
-    @Bean
-    public WebSessionCookieProperties webSessionCookieProperties() {
-        return new WebSessionCookieProperties();
     }
 }
