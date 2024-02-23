@@ -23,6 +23,11 @@
         <maven.compiler.release>${java.version}</maven.compiler.release>
     </properties>
 
+    <scm>
+        <connection>scm:git:git@github.com:ebi-gdp/backend-for-frontend-gateway.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
