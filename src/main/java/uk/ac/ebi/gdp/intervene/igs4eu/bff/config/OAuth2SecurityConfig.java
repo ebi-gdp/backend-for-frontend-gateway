@@ -19,7 +19,6 @@ package uk.ac.ebi.gdp.intervene.igs4eu.bff.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
@@ -38,26 +37,12 @@ public class OAuth2SecurityConfig {
 
     private static final String actuatorEndpoint = "/actuator/health";
 
-    @Profile("!dev")
-    @Bean
-    public SecurityWebFilterChain springSecurityFilterChain(final ServerHttpSecurity http,
-                                                            @Value("${spring.security.oauth2.client.provider.elixir.success-url}") final String successRedirectURL,
-                                                            @Value("${spring.security.oauth2.client.logout-uri}") final String logoutURI,
-                                                            @Value("${web-client.base-url}") final String baseURL) throws URISyntaxException {
-        return securityConfig(configureMatchers(http, actuatorEndpoint),
-                successRedirectURL,
-                redirectServerLogoutSuccessHandler(baseURL),
-                logoutURI)
-                .build();
-    }
-
-    @Profile("dev")
     @Bean
     public SecurityWebFilterChain springSecurityFilterChainForDev(final ServerHttpSecurity http,
                                                                   @Value("${spring.security.oauth2.client.provider.elixir.success-url}") final String successRedirectURL,
                                                                   @Value("${spring.security.oauth2.client.logout-uri}") final URI logoutURI,
                                                                   @Value("${web-client.base-url}") final String baseURL,
-                                                                  @Value("${whitelist.test.uri}") final URI whiteListURI) throws URISyntaxException {
+                                                                  @Value("${whitelist.uri}") final URI whiteListURI) throws URISyntaxException {
         final ServerHttpSecurity serverHttpSecurity = configureMatchers(http, whiteListURI.getPath(), actuatorEndpoint);
         return securityConfig(serverHttpSecurity,
                 successRedirectURL,
