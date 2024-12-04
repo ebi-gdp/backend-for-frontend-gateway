@@ -29,6 +29,7 @@ import uk.ac.ebi.gdp.intervene.igs4eu.bff.handler.WebSessionServerLogoutHandler;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
@@ -42,8 +43,9 @@ public class OAuth2SecurityConfig {
                                                                   @Value("${spring.security.oauth2.client.provider.elixir.success-url}") final String successRedirectURL,
                                                                   @Value("${spring.security.oauth2.client.logout-uri}") final URI logoutURI,
                                                                   @Value("${web-client.base-url}") final String baseURL,
-                                                                  @Value("${whitelist.uri}") final URI whiteListURI) throws URISyntaxException {
-        final ServerHttpSecurity serverHttpSecurity = configureMatchers(http, whiteListURI.getPath(), actuatorEndpoint);
+                                                                  @Value("${whitelist.paths}") final List<String> whiteListPaths) throws URISyntaxException {
+        whiteListPaths.add(actuatorEndpoint);
+        final ServerHttpSecurity serverHttpSecurity = configureMatchers(http, whiteListPaths.toArray(new String[0]));
         return securityConfig(serverHttpSecurity,
                 successRedirectURL,
                 redirectServerLogoutSuccessHandler(baseURL),
