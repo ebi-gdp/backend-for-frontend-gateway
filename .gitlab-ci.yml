@@ -33,7 +33,7 @@ test:
   artifacts:
     paths:
       - target/*.jar
-    expire_in: 30 mins
+    expire_in: 30 min
 
 containerize:
   stage: containerize
