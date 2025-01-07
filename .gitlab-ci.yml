@@ -97,7 +97,7 @@ deploy:
     - SECRET_FILES_PATH=$(dirname "$DATABASE_SECRET")
     - kubectl -n $NAMESPACE apply -f "$SECRET_FILES_PATH"/
     - |
-      helm upgrade --install bff "./deployments" -f "./deployments/values-${ENV_FILE}.yaml" \
+      helm upgrade --install backend-for-frontend "./deployments" -f "./deployments/values-${ENV_FILE}.yaml" \
       --namespace "$NAMESPACE" \
       --set image.tag="$CI_COMMIT_TAG"
   rules:
