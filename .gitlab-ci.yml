@@ -35,7 +35,7 @@ build:
     - 'mvn $MAVEN_CLI_OPTS package $SKIP_TESTS --also-make'
   artifacts:
     paths:
-      - '*/target'
+      - target/
     expire_in: 30 min
   rules:
     - if: '$STAGE != $DEPLOY_STAGE'
