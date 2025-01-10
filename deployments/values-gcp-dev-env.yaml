@@ -19,7 +19,7 @@ image:
   pullPolicy: Always
 
 # Service account
-serviceAccount: ksa-cloud-sql
+serviceAccount: gcp-service-api
 
 # Application properties file
 properties:

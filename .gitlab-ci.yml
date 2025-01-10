@@ -123,6 +123,8 @@ deploy:
       else
         echo "Skipping secret deployment.";
       fi
+    - 'echo NAMESPACE set to $NAMESPACE'
+    - 'echo ENV_FILE set to $ENV_FILE'
     - |
       helm upgrade --install backend-for-frontend "./deployments" -f "./deployments/values-${ENV_FILE}.yaml" \
       --namespace "$NAMESPACE" \
