@@ -1,0 +1,13 @@
+apiVersion: cloud.google.com/v1
+kind: BackendConfig
+metadata:
+  name: bff-health-check-config
+  namespace: intervene-prod
+spec:
+  healthCheck:
+    checkIntervalSec: 120       # Interval between health checks
+    timeoutSec: 90              # Timeout for each health check
+    healthyThreshold: 1        # Number of successes for a healthy state
+    unhealthyThreshold: 2      # Number of failures for an unhealthy state
+    requestPath: /bff/actuator/health # Custom health check path
+    port: 8080                 # Port to use for health checks (change if needed)
