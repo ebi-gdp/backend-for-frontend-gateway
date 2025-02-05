@@ -23,6 +23,22 @@ spec:
         - name: {{ .Values.serviceName }}
           image: {{ .Values.image.repository }}:{{ .Values.image.tag }}-{{ .Values.image.tagPostfix }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          livenessProbe:
+            initialDelaySeconds: 120
+            periodSeconds: 120
+            failureThreshold: 3
+            httpGet:
+              path: /bff/actuator/health
+              port: 8080
+              scheme: HTTP
+          readinessProbe:
+            initialDelaySeconds: 120
+            periodSeconds: 120
+            failureThreshold: 3
+            httpGet:
+              path: /bff/actuator/health
+              port: 8080
+              scheme: HTTP
           resources:
             limits:
               cpu: {{ .Values.resources.limits.cpu }}
@@ -44,13 +60,6 @@ spec:
           envFrom:
             - secretRef:
                 name: db-secret
-          livenessProbe:
-            initialDelaySeconds: 120
-            failureThreshold: 3
-            httpGet:
-              path: /bff/actuator/health
-              port: 8080
-              scheme: HTTP
         - name: cloud-sql-proxy
           image: "gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.8.0"
           args:
