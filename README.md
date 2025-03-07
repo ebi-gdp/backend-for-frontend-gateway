@@ -153,40 +153,40 @@ Before you can build and run this project, ensure that the following tools/softw
 
 ## Database Configuration (R2DBC)
 
-| Parameter               | Value                                                                                     | Description                                            |
-|-------------------------|-------------------------------------------------------------------------------------------|--------------------------------------------------------|
-| `spring.r2dbc.url`      | `r2dbc:postgresql://127.0.0.1:5432/intervene?currentSchema=intervene-dev&sslMode=disable` | Database connection string.                            |
-| `spring.r2dbc.username` | `${DB_USERNAME}`                                                                          | Database username (fetched from environment variable). |
-| `spring.r2dbc.password` | `${DB_PASSWORD}`                                                                          | Database password (fetched from environment variable). |
+| Parameter               | Value                                                                                                 | Description                                            |
+|-------------------------|-------------------------------------------------------------------------------------------------------|--------------------------------------------------------|
+| `spring.r2dbc.url`      | `r2dbc:postgresql://127.0.0.1:5432/intervene-dev?currentSchema=geneticscoresplatform&sslMode=disable` | Database connection string.                            |
+| `spring.r2dbc.username` | `${DB_USERNAME}`                                                                                      | Database username (fetched from environment variable). |
+| `spring.r2dbc.password` | `${DB_PASSWORD}`                                                                                      | Database password (fetched from environment variable). |
 
 ### R2DBC connection string details
 
-| Parameter               | Value            | Description                                            |
-|-------------------------|------------------|--------------------------------------------------------|
-| `spring.r2dbc.protocol` | `r2dbc`          | Specifies the R2DBC protocol.                          |
-| `spring.r2dbc.driver`   | `postgresql`     | Specifies the database driver.                         |
-| `spring.r2dbc.host`     | `127.0.0.1`      | Database host (IP or domain).                          |
-| `spring.r2dbc.port`     | `5432`           | Database port (default for PostgreSQL).                |
-| `spring.r2dbc.database` | `intervene`      | Database name.                                         |
-| `spring.r2dbc.schema`   | `intervene-dev`  | Schema within the database.                            |
-| `spring.r2dbc.sslMode`  | `disable`        | SSL mode for database connection.                      |
+| Parameter               | Value                   | Description                             |
+|-------------------------|-------------------------|-----------------------------------------|
+| `spring.r2dbc.protocol` | `r2dbc`                 | Specifies the R2DBC protocol.           |
+| `spring.r2dbc.driver`   | `postgresql`            | Specifies the database driver.          |
+| `spring.r2dbc.host`     | `127.0.0.1`             | Database host (IP or domain).           |
+| `spring.r2dbc.port`     | `5432`                  | Database port (default for PostgreSQL). |
+| `spring.r2dbc.database` | `intervene-dev`         | Database name.                          |
+| `spring.r2dbc.schema`   | `geneticscoresplatform` | Schema within the database.             |
+| `spring.r2dbc.sslMode`  | `disable`               | SSL mode for database connection.       |
 
 ## API Gateway Configuration
 
-| Route ID           | URI                                                            | Description                                |
-|--------------------|----------------------------------------------------------------|--------------------------------------------|
-| `file-handler`     | `http://file-handler.intervene-dev.svc.cluster.local:8080`     | Base URL for the File Handler Service.     |
-| `pipeline-manager` | `http://pipeline-manager.intervene-dev.svc.cluster.local:8080` | Base URL for the Pipeline Manager Service. |
-| `user-manager`     | `http://user-manager.intervene-dev.svc.cluster.local:8080`     | Base URL for the User Manager Service.     |
-| `key-handler`      | `http://key-handler.intervene-dev.svc.cluster.local:8080`      | Base URL for the Key Handler Service.      |
+| Route ID           | URI                                                          | Example                                                        | Description                                |
+|--------------------|--------------------------------------------------------------|----------------------------------------------------------------|--------------------------------------------|
+| `file-handler`     | `http://file-handler.{namespace}.svc.cluster.local:8080`     | `http://file-handler.intervene-dev.svc.cluster.local:8080`     | Base URL for the File Handler Service.     |
+| `pipeline-manager` | `http://pipeline-manager.{namespace}.svc.cluster.local:8080` | `http://pipeline-manager.intervene-dev.svc.cluster.local:8080` | Base URL for the Pipeline Manager Service. |
+| `user-manager`     | `http://user-manager.{namespace}.svc.cluster.local:8080`     | `http://user-manager.intervene-dev.svc.cluster.local:8080`     | Base URL for the User Manager Service.     |
+| `key-handler`      | `http://key-handler.{namespace}.svc.cluster.local:8080`      | `http://key-handler.intervene-dev.svc.cluster.local:8080`      | Base URL for the Key Handler Service.      |
 
 ## Redis Configuration
 
-| Parameter                  | Value                                   | Description            |
-|----------------------------|-----------------------------------------|------------------------|
-| `spring.redis.host`        | `redis.intervene-dev.svc.cluster.local` | Redis server hostname. |
-| `spring.redis.port`        | `6379`                                  | Redis server port.     |
-| `spring.redis.client-type` | `lettuce`                               | Redis client type.     |
+| Parameter                  | Value                                 | Example                                 | Description            |
+|----------------------------|---------------------------------------|-----------------------------------------|------------------------|
+| `spring.redis.host`        | `redis.{namespace}.svc.cluster.local` | `redis.intervene-dev.svc.cluster.local` | Redis server hostname. | 
+| `spring.redis.port`        | `6379`                                |                                         | Redis server port.     |
+| `spring.redis.client-type` | `lettuce`                             |                                         | Redis client type.     |
 
 ## Session Management
 
