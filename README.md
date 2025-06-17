@@ -147,7 +147,7 @@ Before you can build and run this project, ensure that the following tools/softw
 | `spring.security.oauth2.client.registration.elixir.scope[1]`                     | `profile`                                                              | User profile scope.                             |
 | `spring.security.oauth2.client.registration.elixir.scope[2]`                     | `email`                                                                | Email scope.                                    |
 | `spring.security.oauth2.client.registration.elixir.scope[3]`                     | `offline_access`                                                       | Scope for offline access.                       |
-| `spring.security.oauth2.client.provider.elixir.issuer-uri`                       | `https://login.elixir-czech.org/oidc/`                                 | OIDC issuer URI.                                |
+| `spring.security.oauth2.client.provider.elixir.issuer-uri`                       | `https://login.aai.lifescience-ri.eu/oidc/`                                 | OIDC issuer URI.                                |
 | `spring.security.oauth2.client.provider.elixir.success-url`                      | `https://gcp.geneticscores.org/pgs-calculator`                         | URL to redirect upon successful authentication. |
 | `spring.security.oauth2.client.logout-uri`                                       | `/logout`                                                              | Logout endpoint.                                |
 
